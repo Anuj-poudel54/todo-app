@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+
+{% block body %}
+
+
+<!-- Form for work -->
+<div class="container my-3">
+    <h1>Add new todo</h1>
+    <form action="/" method="POST">
+        <div class="mb-3 row">
+            <label for="title" class="col-sm-2 col-form-label">Title</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" name="title" id="title">
+            </div>
+        </div>
+        <div class="mb-3 row">
+            <label for="desc" class="col-sm-2 col-form-label">Work</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" name="desc" id="desc" required>
+            </div>
+        </div>
+
+        <div class="d-grid gap-2">
+            <button type="submit" class="btn btn-success">Save</button>
+            
+        </div>
+
+    </form>
+</div>
+
+<!-- Displaying todos -->
+<div class="container">
+    <hr>
+    <h1>Your works</h1>
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Title</th>
+                <th scope="col">Description</th>
+                <th scope="col">Time</th>
+                <th scope="col">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+
+            {% if all_todo|length == 0 %}
+            <tr>
+                <td><h3>NO TOdOS. Add your todo now!</h3></td>
+            </tr>
+            {% else %}
+
+            {% for todo in all_todo %}
+            <tr>
+                <th scope="row">{{loop.index}}</th>
+                <td class="status-{{todo.status}}">{{todo.title}}</td>
+                <td class="status-{{todo.status}}">{{todo.desc}}</td>
+                <td>{{todo.date_created}}</td>
+                <td>
+                    <a href="/finished/{{todo.sn}}"><input type="button"
+                            class="btn btn-outline-dark status-{{todo.status}}-button" value="Finished"></a>
+                    <a href="/edit/{{todo.sn}}"><button type="button" class="btn btn-outline-primary">Edit</button></a>
+                    <a href="/delete/{{todo.sn}}"><button type="button"
+                            class="btn btn-outline-danger">Delete</button></a>
+                </td>
+            </tr>
+            {% endfor %}
+            {% endif %}
+
+        </tbody>
+    </table>
+</div>
+
+{% endblock body %}
+
+{% block js %}
+    <script>
+        const finished_work = document.getElementsByClassName("status-finished-button");
+        for (let i = 0; i < finished_work.length; i++)
+        {
+                finished_work[i].setAttribute('value', 'Undo');
+        }        
+
+        const undo_finished_work = document.getElementsByClassName("status-pending-button");
+        for (let i = 0; i < undo_finished_work.length; i++)
+        {
+                undo_finished_work[i].setAttribute('value', 'Finished');
+        }
+    </script>
+{% endblock js %}
